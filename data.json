@@ -1,0 +1,75 @@
+{
+  "workouts": {
+    "pg": [
+      {
+        "name": "Dribbling Drill",
+        "steps": [
+          "Comece com a bola na mão direita.",
+          "Drible baixo com a mão direita por 10 segundos.",
+          "Troque para a mão esquerda e repita.",
+          "Aumente a velocidade gradualmente."
+        ],
+        "video": "https://www.youtube.com/watch?v=example1"
+      },
+      {
+        "name": "Passing Accuracy",
+        "steps": [
+          "Posicione-se a 3 metros de um parceiro.",
+          "Passe a bola com precisão.",
+          "Alterne entre passes altos e baixos.",
+          "Conte os passes bem-sucedidos."
+        ],
+        "video": "https://www.youtube.com/watch?v=example2"
+      }
+    ],
+    "sg": [
+      {
+        "name": "Shooting Form",
+        "steps": [
+          "Fique em posição de tiro básica.",
+          "Mantenha os cotovelos para dentro.",
+          "Siga através do movimento.",
+          "Pratique arremessos de curta distância."
+        ],
+        "video": "https://www.youtube.com/watch?v=example3"
+      }
+    ],
+    "sf": [
+      {
+        "name": "Footwork Drill",
+        "steps": [
+          "Comece em posição defensiva.",
+          "Pratique slides laterais.",
+          "Inclua pivôs.",
+          "Mantenha o equilíbrio."
+        ],
+        "video": "https://www.youtube.com/watch?v=example4"
+      }
+    ],
+    "pf": [
+      {
+        "name": "Post Moves",
+        "steps": [
+          "Posicione-se de costas para a cesta.",
+          "Pratique drop step.",
+          "Adicione hook shot.",
+          "Trabalhe com um defensor."
+        ],
+        "video": "https://www.youtube.com/watch?v=example5"
+      }
+    ],
+    "c": [
+      {
+        "name": "Rebounding Drill",
+        "steps": [
+          "Posicione-se sob a cesta.",
+          "Salte para pegar rebotes.",
+          "Use ambas as mãos.",
+          "Pratique contra um parceiro."
+        ],
+        "video": "https://www.youtube.com/watch?v=example6"
+      }
+    ]
+  },
+  "users": []
+}
