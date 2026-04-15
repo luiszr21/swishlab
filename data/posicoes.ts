@@ -22,7 +22,6 @@ export interface Posicao {
   cor: string;
   treinos: Treino[];
 }
-
 export const posicoes: Posicao[] = [
   {
     id: 'armador',
