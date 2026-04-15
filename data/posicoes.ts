@@ -38,7 +38,7 @@ export const posicoes: Posicao[] = [
         descricao: 'Domine o drible cruzado e a inversão de bola para quebrar marcações.',
         duracao: '20 min',
         habilidade: 'Drible',
-        urlYoutube: 'https://www.youtube.com/results?search_query=drible+basquete+armador',
+        urlYoutube: 'https://www.youtube.com/watch?v=UmW0RU1nGCI',
         dicas: ['Mantenha os joelhos flexionados', 'Cabeça sempre erguida', 'Proteja a bola com o corpo'],
       },
       {

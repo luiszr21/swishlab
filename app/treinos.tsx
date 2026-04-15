@@ -1,24 +1,24 @@
-import React from 'react';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { posicoes, Treino } from '../data/posicoes';
-import { cores, espacamento, arredondamento } from '../constants/theme';
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { arredondamento, cores, espacamento } from "../constants/theme";
+import { posicoes, Treino } from "../data/posicoes";
 
 const ICONES_HABILIDADE: Record<string, string> = {
-  Drible: '🔄',
-  Arremesso: '🎯',
-  Defesa: '🛡️',
-  Passe: '↗️',
-  Físico: '💪',
-  Poste: '🏋️',
+  Drible: "🔄",
+  Arremesso: "🎯",
+  Defesa: "🛡️",
+  Passe: "↗️",
+  Físico: "💪",
+  Poste: "🏋️",
 };
 
 export default function TelaTreinos() {
@@ -39,25 +39,40 @@ export default function TelaTreinos() {
 
   const handleSelecionarTreino = (treino: Treino) => {
     router.push({
-      pathname: '/detalhe-treino',
+      pathname: "/detalhe-treinos",
       params: { posicaoId: posicao.id, treinoId: treino.id },
     });
   };
 
   const renderCabecalho = () => (
     <View style={styles.cabecalho}>
-      <TouchableOpacity style={styles.botaoVoltar} onPress={() => router.back()}>
+      <TouchableOpacity
+        style={styles.botaoVoltar}
+        onPress={() => router.back()}
+      >
         <Text style={styles.textoVoltar}>← Voltar</Text>
       </TouchableOpacity>
       <View style={styles.topoPosicao}>
-        <View style={[styles.badge, { backgroundColor: posicao.cor + '20', borderColor: posicao.cor + '50' }]}>
-          <Text style={[styles.badgeTexto, { color: posicao.cor }]}>{posicao.abreviacao}</Text>
+        <View
+          style={[
+            styles.badge,
+            {
+              backgroundColor: posicao.cor + "20",
+              borderColor: posicao.cor + "50",
+            },
+          ]}
+        >
+          <Text style={[styles.badgeTexto, { color: posicao.cor }]}>
+            {posicao.abreviacao}
+          </Text>
         </View>
         <Text style={styles.icone}>{posicao.icone}</Text>
       </View>
       <Text style={styles.titulo}>{posicao.nome}</Text>
       <Text style={styles.subtitulo}>{posicao.descricao}</Text>
-      <Text style={styles.totalTreinos}>{posicao.treinos.length} treinos disponíveis</Text>
+      <Text style={styles.totalTreinos}>
+        {posicao.treinos.length} treinos disponíveis
+      </Text>
     </View>
   );
 
@@ -67,15 +82,31 @@ export default function TelaTreinos() {
       onPress={() => handleSelecionarTreino(item)}
       activeOpacity={0.85}
     >
-      <View style={[styles.cardEsquerda, { backgroundColor: posicao.cor + '15' }]}>
-        <Text style={styles.iconeHabilidade}>{ICONES_HABILIDADE[item.habilidade]}</Text>
+      <View
+        style={[styles.cardEsquerda, { backgroundColor: posicao.cor + "15" }]}
+      >
+        <Text style={styles.iconeHabilidade}>
+          {ICONES_HABILIDADE[item.habilidade]}
+        </Text>
       </View>
       <View style={styles.cardCorpo}>
         <Text style={styles.tituloTreino}>{item.titulo}</Text>
-        <Text style={styles.descricaoTreino} numberOfLines={2}>{item.descricao}</Text>
+        <Text style={styles.descricaoTreino} numberOfLines={2}>
+          {item.descricao}
+        </Text>
         <View style={styles.rodape}>
-          <View style={[styles.tag, { backgroundColor: posicao.cor + '15', borderColor: posicao.cor + '40' }]}>
-            <Text style={[styles.tagTexto, { color: posicao.cor }]}>{item.habilidade}</Text>
+          <View
+            style={[
+              styles.tag,
+              {
+                backgroundColor: posicao.cor + "15",
+                borderColor: posicao.cor + "40",
+              },
+            ]}
+          >
+            <Text style={[styles.tagTexto, { color: posicao.cor }]}>
+              {item.habilidade}
+            </Text>
           </View>
           <Text style={styles.duracao}>⏱ {item.duracao}</Text>
         </View>
@@ -120,9 +151,9 @@ const styles = StyleSheet.create({
     color: cores.destaque,
   },
   topoPosicao: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: espacamento.sm,
   },
   badge: {
@@ -133,14 +164,14 @@ const styles = StyleSheet.create({
   },
   badgeTexto: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   icone: {
     fontSize: 32,
   },
   titulo: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     color: cores.textoPrimario,
     marginBottom: espacamento.xs,
   },
@@ -152,7 +183,7 @@ const styles = StyleSheet.create({
   },
   totalTreinos: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
     color: cores.textoDesativado,
     marginBottom: espacamento.md,
   },
@@ -163,15 +194,15 @@ const styles = StyleSheet.create({
     borderRadius: arredondamento.lg,
     borderWidth: 1,
     borderColor: cores.borda,
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
   },
   cardEsquerda: {
     width: 56,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: "stretch",
+    justifyContent: "center",
+    alignItems: "center",
   },
   iconeHabilidade: {
     fontSize: 22,
@@ -182,7 +213,7 @@ const styles = StyleSheet.create({
   },
   tituloTreino: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     color: cores.textoPrimario,
     marginBottom: espacamento.xs,
   },
@@ -193,8 +224,8 @@ const styles = StyleSheet.create({
     marginBottom: espacamento.sm,
   },
   rodape: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: espacamento.sm,
   },
   tag: {
@@ -205,7 +236,7 @@ const styles = StyleSheet.create({
   },
   tagTexto: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   duracao: {
     fontSize: 11,
