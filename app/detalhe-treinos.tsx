@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Linking,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { WebView } from 'react-native-webview';
 import { posicoes } from '../data/posicoes';
 import { cores, espacamento, arredondamento } from '../constants/theme';
 
@@ -32,6 +32,7 @@ export default function TelaDetalheTreino() {
   const posicao = posicoes.find((p) => p.id === posicaoId);
   const treino = posicao?.treinos.find((t) => t.id === treinoId);
 
+
   if (!posicao || !treino) {
     return (
       <SafeAreaView style={styles.container}>
@@ -42,9 +43,41 @@ export default function TelaDetalheTreino() {
     );
   }
 
-  const abrirYoutube = () => {
-    Linking.openURL(treino.urlYoutube);
-  };
+  function extractYoutubeId(raw: string) {
+    try {
+      const url = decodeURIComponent(raw);
+      if (url.includes('youtube.com/watch')) {
+        const match = url.match(/[?&]v=([^&]+)/);
+        if (match && match[1]) return match[1];
+      }
+      if (url.includes('youtu.be/')) {
+        return url.split('youtu.be/')[1].split(/[?&]/)[0];
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  function createEmbedUrl(videoId: string, start?: number, end?: number) {
+    const params = new URLSearchParams({
+      autoplay: '1',
+      controls: '1',
+      rel: '0',
+      modestbranding: '1',
+      playsinline: '1',
+    });
+
+    if (start != null) {
+      params.set('start', String(Math.max(0, Math.floor(start))));
+    }
+
+    if (end != null) {
+      params.set('end', String(Math.max(0, Math.ceil(end))));
+    }
+
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -89,15 +122,37 @@ export default function TelaDetalheTreino() {
           ))}
         </View>
 
-        {/* Botão YouTube */}
-        <TouchableOpacity
-          style={[styles.botaoYoutube, { backgroundColor: posicao.cor }]}
-          onPress={abrirYoutube}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.botaoYoutubeIcone}>▶</Text>
-          <Text style={styles.botaoYoutubeTexto}>Ver vídeo no YouTube</Text>
-        </TouchableOpacity>
+        {/* Player embutido (exibido automaticamente) */}
+        <View style={styles.playerContainer}>
+          {treino.urlYoutube ? (
+            (() => {
+              const id = extractYoutubeId(treino.urlYoutube);
+              const startNum = treino.start;
+              const endNum = treino.end;
+              const source = id
+                ? { uri: createEmbedUrl(id, startNum, endNum) }
+                : { uri: treino.urlYoutube };
+                return (
+                  <WebView
+                    originWhitelist={["*"]}
+                    source={source}
+                    style={{ flex: 1, backgroundColor: '#000' }}
+                    allowsFullscreenVideo
+                    javaScriptEnabled
+                    domStorageEnabled
+                    mediaPlaybackRequiresUserAction={false}
+                    allowsInlineMediaPlayback
+                    startInLoadingState
+                    onError={() => {}}
+                  />
+                );
+            })()
+          ) : null}
+        </View>
+
+        <Text style={styles.avisoEmbed}>
+          Se aparecer erro 153, este vídeo do YouTube não permite reprodução embutida. Nesse caso, só abre no YouTube externo ou com outro link que aceite embed.
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -220,5 +275,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#fff',
+  },
+  playerContainer: {
+    height: 260,
+    marginTop: espacamento.md,
+    borderRadius: arredondamento.md,
+    overflow: 'hidden',
+    backgroundColor: '#000',
+  },
+  fecharPlayer: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    padding: 6,
+    borderRadius: 20,
+  },
+  fecharText: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+  avisoEmbed: {
+    marginTop: espacamento.md,
+    color: cores.textoSecundario,
+    fontSize: 13,
+    lineHeight: 18,
   },
 });

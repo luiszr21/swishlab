@@ -12,7 +12,7 @@ export default function Landing() {
     const checkAuth = async () => {
       const isLogged = await getIsLogged();
       if (isLogged) {
-        router.replace('/inicio');
+        router.replace('/categorias');
       } else {
         router.replace('/auth/login');
       }

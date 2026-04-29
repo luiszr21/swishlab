@@ -10,6 +10,8 @@ export interface Treino {
   habilidade: Habilidade;
   urlYoutube: string;
   dicas: string[];
+  start?: number;
+  end?: number;
 }
 
 // Estrutura de uma posição
@@ -37,7 +39,7 @@ export const posicoes: Posicao[] = [
         descricao: 'Domine o drible cruzado e a inversão de bola para quebrar marcações.',
         duracao: '20 min',
         habilidade: 'Drible',
-        urlYoutube: 'https://www.youtube.com/watch?v=UmW0RU1nGCI',
+        urlYoutube: 'https://www.youtube.com/watch?v=3mMH1Kk091g',
         dicas: ['Mantenha os joelhos flexionados', 'Cabeça sempre erguida', 'Proteja a bola com o corpo'],
       },
       {
@@ -57,6 +59,21 @@ export const posicoes: Posicao[] = [
         habilidade: 'Arremesso',
         urlYoutube: 'https://www.youtube.com/results?search_query=arremesso+mid+range+basquete',
         dicas: ['Equilíbrio é fundamental', 'Siga o arremesso com o pulso', 'Visualize o aro antes de soltar'],
+      },
+      {
+        id: 'armador-mecanica-arremesso',
+        titulo: 'Mecânica de arremesso',
+        descricao: 'Treino focado na mecânica do arremesso; repetições próximas ao aro.',
+        duracao: '10 min',
+        habilidade: 'Arremesso',
+        urlYoutube: 'https://www.youtube.com/watch?v=wYYTRQyYHXU',
+        dicas: [
+          'Inicie os arremessos próximo ao aro sem saltar',
+          'Faça no mínimo 5 arremessos de 3 posições diferentes',
+          'Vá se distanciando conforme achar conveniente',
+        ],
+        start: 0.5,
+        end: 1.1,
       },
     ],
   },
