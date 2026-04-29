@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
     try {
       await loginUser(trimmedIdentifier, trimmedPassword);
-      router.replace('/inicio');
+      router.replace('/categorias');
     } catch (error: any) {
       Alert.alert('Erro', error.message || 'Não foi possível fazer login.');
     } finally {
