@@ -1,88 +1,112 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import data from '../data.json';
+import { supabase } from './supabase';
 
 type User = {
+  id: string;
+  email: string;
+  username?: string;
+};
+
+export const registerUser = async (user: {
   username: string;
   email: string;
   password: string;
-};
+}): Promise<User> => {
+  const email = user.email.trim().toLowerCase();
+  const username = user.username.trim();
 
-const normalize = (value: string) => value.trim().toLowerCase();
-const CURRENT_USER_KEY = 'currentUser';
-const IS_LOGGED_KEY = 'isLogged';
-const REGISTERED_USERS_KEY = 'registeredUsers';
+  let data;
+  let error;
 
-const initialUsers: User[] = data.users ?? [];
+  try {
+    ({ data, error } = await supabase.auth.signUp({
+      email,
+      password: user.password,
+      options: {
+        data: {
+          username,
+        },
+      },
+    }));
+  } catch {
+    throw new Error('Falha de conexão com o Supabase. Verifique a URL, a chave e a internet.');
+  }
 
-const loadStoredUsers = async (): Promise<User[]> => {
-  const usersJson = await AsyncStorage.getItem(REGISTERED_USERS_KEY);
-  if (usersJson) {
-    try {
-      const storedUsers = JSON.parse(usersJson) as User[];
-      return storedUsers;
-    } catch {
-      return initialUsers;
+  if (error) {
+    if (error.message.toLowerCase().includes('network request failed')) {
+      throw new Error('Falha de conexão com o Supabase. Verifique a URL, a chave e a internet.');
     }
-  }
-  return initialUsers;
-};
 
-const saveUsers = async (users: User[]) => {
-  await AsyncStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(users));
-};
-
-export const registerUser = async (user: User) => {
-  const users = await loadStoredUsers();
-  const username = normalize(user.username);
-  const email = normalize(user.email);
-
-  if (users.some((item) => normalize(item.username) === username)) {
-    throw new Error('Nome de usuário já está em uso.');
+    throw new Error(error.message);
   }
 
-  if (users.some((item) => normalize(item.email) === email)) {
-    throw new Error('Email já está em uso.');
+  if (!data.user) {
+    throw new Error('Não foi possível criar a conta.');
   }
 
-  const newUser = { ...user, username: user.username.trim(), email: user.email.trim() };
-  const updatedUsers = [...users, newUser];
-  await saveUsers(updatedUsers);
-  return newUser;
+  return {
+    id: data.user.id,
+    email,
+    username,
+  };
 };
 
 export const loginUser = async (identifier: string, password: string) => {
-  const users = await loadStoredUsers();
-  const normalized = normalize(identifier);
-  const user = users.find(
-    (item) => normalize(item.email) === normalized || normalize(item.username) === normalized
-  );
+  const email = identifier.trim().toLowerCase();
 
-  if (!user) {
-    throw new Error('Usuário ou email não encontrado.');
+  if (!email.includes('@')) {
+    throw new Error('Use seu email para entrar.');
   }
 
-  if (user.password !== password) {
-    throw new Error('Senha incorreta.');
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
   }
 
-  await AsyncStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-  await AsyncStorage.setItem(IS_LOGGED_KEY, 'true');
-  return user;
+  if (!data.user) {
+    throw new Error('Não foi possível fazer login.');
+  }
+
+  return {
+    id: data.user.id,
+    email: data.user.email ?? email,
+    username: (data.user.user_metadata?.username as string | undefined) ?? undefined,
+  };
 };
 
 export const getCurrentUser = async (): Promise<User | null> => {
-  const userJson = await AsyncStorage.getItem(CURRENT_USER_KEY);
-  return userJson ? JSON.parse(userJson) : null;
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    email: user.email ?? '',
+    username: (user.user_metadata?.username as string | undefined) ?? undefined,
+  };
 };
 
 export const getIsLogged = async (): Promise<boolean> => {
-  const isLogged = await AsyncStorage.getItem(IS_LOGGED_KEY);
-  return isLogged === 'true';
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  return !!session;
 };
 
 export const logoutUser = async () => {
-  await AsyncStorage.removeItem(CURRENT_USER_KEY);
-  await AsyncStorage.removeItem(IS_LOGGED_KEY);
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    throw new Error(error.message);
+  }
 };
 
 export type { User };

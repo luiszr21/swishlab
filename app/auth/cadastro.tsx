@@ -33,7 +33,7 @@ export default function Cadastro() {
     setLoading(true);
     try {
       await registerUser({ username: trimmedUsername, email: trimmedEmail, password: trimmedPassword });
-      Alert.alert('Sucesso', 'Conta criada com sucesso! Faça login para continuar.');
+      Alert.alert('Sucesso', 'Conta criada! Verifique seu email para confirmar o cadastro.');
       router.replace('/auth/login');
     } catch (error: any) {
       Alert.alert('Erro', error.message || 'Não foi possível criar a conta.');

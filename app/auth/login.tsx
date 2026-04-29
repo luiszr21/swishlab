@@ -32,14 +32,15 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Entrar</Text>
-      <Text style={styles.subtitle}>Use nome de usuário ou email e senha.</Text>
+      <Text style={styles.subtitle}>Use seu email e senha.</Text>
       <TextInput
         style={styles.input}
-        placeholder="Nome de usuário ou Email"
+        placeholder="Email"
         value={identifier}
         onChangeText={setIdentifier}
         autoCapitalize="none"
-        autoComplete="username"
+        keyboardType="email-address"
+        autoComplete="email"
       />
       <TextInput
         style={styles.input}
