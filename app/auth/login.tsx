@@ -1,7 +1,7 @@
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { loginUser } from '../../services/userData';
+import { getIsLogged, loginUser } from '../../services/userData';
 
 export default function Login() {
   const router = useRouter();
@@ -21,6 +21,13 @@ export default function Login() {
     setLoading(true);
     try {
       await loginUser(trimmedIdentifier, trimmedPassword);
+
+      const isLogged = await getIsLogged();
+      if (!isLogged) {
+        Alert.alert('Erro', 'O login foi concluído, mas a sessão ainda não foi reconhecida. Tente novamente.');
+        return;
+      }
+
       router.replace('/categorias');
     } catch (error: any) {
       Alert.alert('Erro', error.message || 'Não foi possível fazer login.');
