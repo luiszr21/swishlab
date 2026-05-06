@@ -11,6 +11,10 @@ export default function Cadastro() {
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
+    if (loading) {
+      return;
+    }
+
     const trimmedUsername = username.trim();
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
@@ -36,7 +40,8 @@ export default function Cadastro() {
       Alert.alert('Sucesso', 'Conta criada! Verifique seu email para confirmar o cadastro.');
       router.replace('/auth/login');
     } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Não foi possível criar a conta.');
+      const reason = error instanceof Error ? error.message : 'Não foi possível criar a conta.';
+      Alert.alert('Erro', reason);
     } finally {
       setLoading(false);
     }

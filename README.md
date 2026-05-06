@@ -1,50 +1,113 @@
-# Welcome to your Expo app 👋
+# SwishLab
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+SwishLab é um aplicativo mobile/web de treinos de basquete construído com Expo, React Native e TypeScript. O projeto organiza conteúdos por categorias e posições de jogo, oferece login e cadastro com Supabase e prepara a base para acompanhar o progresso do usuário em treinos.
 
-## Get started
+## O que o projeto faz
 
-1. Install dependencies
+- Autentica usuários com Supabase.
+- Cadastra e faz login com email ou nome de usuário.
+- Lista categorias e posições de treino.
+- Exibe treinos e conteúdos relacionados ao basquete.
+- Mantém a sessão do usuário salva entre execuções.
+- Estrutura os serviços de dados para evoluir para um backend mais completo.
 
-   ```bash
-   npm install
-   ```
+## Tecnologias
 
-2. Start the app
+- [Expo](https://expo.dev)
+- [React Native](https://reactnative.dev)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [Supabase](https://supabase.com/)
+- AsyncStorage
 
-   ```bash
-   npx expo start
-   ```
+## Estrutura principal
 
-In the output, you'll find options to open the app in a
+- `app/` - rotas, telas e navegação.
+- `services/` - integração com Supabase e regras de autenticação.
+- `data/` - dados de treino e posições usados no app.
+- `constants/` - tema e tokens visuais.
+- `hooks/` - hooks reutilizáveis.
+- `components/` - componentes reutilizáveis.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Requisitos
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Node.js instalado
+- npm instalado
+- Projeto criado no Supabase
+- Variáveis de ambiente configuradas
 
-## Get a fresh project
+## Configuração do ambiente
 
-When you're ready, run:
+Crie ou ajuste o arquivo `.env.local` na raiz do projeto:
 
-```bash
-npm run reset-project
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=sua-chave-publica-anon
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Como instalar
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Como rodar
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Inicie o projeto com Expo:
 
-## Join the community
+```bash
+npx expo start
+```
 
-Join our community of developers creating universal apps.
+Ou use um atalho específico:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm run start
+```
+
+Outras opções úteis:
+
+```bash
+npm run android
+npm run ios
+npm run web
+```
+
+## Fluxo de uso
+
+1. Abra o app.
+2. Faça cadastro ou login.
+3. A sessão é validada e salva localmente.
+4. O app navega para a área autenticada.
+5. O usuário pode explorar categorias, posições e treinos.
+
+## Arquitetura
+
+```mermaid
+flowchart TD
+  A[Usuário] --> B[Expo Router / app]
+  B --> C[Telas: login, cadastro, categorias, inicio]
+  C --> D[Services]
+  D --> E[Supabase Auth]
+  D --> F[Supabase Database]
+  D --> G[Storage local seguro]
+  F --> H[usuarios]
+  F --> I[categorias_treino]
+  F --> J[treinos]
+  F --> K[progresso_usuario]
+  G --> L[auth_user / auth_session]
+```
+
+## Como os dados se relacionam
+
+- `auth.users` guarda a autenticação principal.
+- `usuarios` guarda o perfil do usuário no banco.
+- `categorias_treino` guarda categorias/posições.
+- `treinos` guarda os treinos vinculados às categorias.
+- `progresso_usuario` guarda o progresso individual do usuário.
+
+## Observações
+
+- O app já está preparado para usar Supabase como base de autenticação.
+- Os dados de treino ainda podem coexistir com arquivos locais enquanto a migração total não for concluída.
+- Para produção, revise as políticas de acesso e as regras de segurança do Supabase.
