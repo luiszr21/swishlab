@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: swishlab-db
+    environment:
+      POSTGRES_USER: swishlab
+      POSTGRES_PASSWORD: swishlab123
+      POSTGRES_DB: swishlab_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swishlab"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - swishlab-network
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: swishlab-backend
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://swishlab:swishlab123@postgres:5432/swishlab_db
+      JWT_SECRET: sua_chave_secreta_super_segura_aqui_mude_em_producao
+      JWT_EXPIRES_IN: 48h
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - swishlab-network
+    restart: unless-stopped
+    command: sh -c "npm run migrate && npm start"
+
+  # Frontend (Expo Web)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: swishlab-frontend
+    environment:
+      EXPO_PUBLIC_SUPABASE_URL: https://vnjefdxxdnmgzjtmpbgq.supabase.co
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_KQvtUharqZTmn0GuUul3zA_9ZrEnDjG
+    ports:
+      - "8081:8081"
+    depends_on:
+      - backend
+    networks:
+      - swishlab-network
+    restart: unless-stopped
+
+networks:
+  swishlab-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
