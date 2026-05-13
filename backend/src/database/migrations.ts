@@ -1,10 +1,10 @@
 import pool from './connection';
 
-export async function runMigrations() {
+export async function runMigrations(): Promise<void> {
   const client = await pool.connect();
 
   try {
-    console.log('Running migrations...');
+    console.log('Running database migrations...');
 
     // Create users table
     await client.query(`
@@ -36,22 +36,11 @@ export async function runMigrations() {
     await client.query(`CREATE INDEX IF NOT EXISTS idx_training_history_user_id ON training_history(user_id);`);
     await client.query(`CREATE INDEX IF NOT EXISTS idx_training_history_completed_at ON training_history(completed_at);`);
 
-    console.log('✅ Migrations completed successfully');
+    console.log('✅ Database migrations completed successfully');
   } catch (error) {
     console.error('❌ Migration error:', error);
     throw error;
   } finally {
     client.release();
   }
-}
-
-// Run migrations if this file is executed directly
-if (require.main === module) {
-  runMigrations().then(() => {
-    console.log('Migrations finished');
-    process.exit(0);
-  }).catch((error) => {
-    console.error('Migration failed:', error);
-    process.exit(1);
-  });
 }

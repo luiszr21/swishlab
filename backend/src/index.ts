@@ -7,6 +7,7 @@ import trainingsRoutes from './routes/trainings';
 import categoriesRoutes from './routes/categories';
 import userRoutes from './routes/users';
 import { errorHandler } from './middleware/errorHandler';
+import { runMigrations } from './database/migrations';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +36,19 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// Run migrations and start server
+async function start() {
+  try {
+    console.log('Running database migrations...');
+    await runMigrations();
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+start();
