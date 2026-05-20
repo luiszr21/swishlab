@@ -1,5 +1,3 @@
-import { supabase } from './supabase';
-
 /**
  * Tipos baseados na estrutura do banco
  */
@@ -9,7 +7,17 @@ export interface CategoriaTreino {
   descricao: string;
   icone: string;
   cor: string;
-  criado_em: string;
+  criado_em?: string;
+}
+
+export interface Posicao {
+  id: string;
+  nome: string;
+  abreviacao: string;
+  descricao: string;
+  icone: string;
+  cor: string;
+  treinos?: any[];
 }
 
 /**
@@ -20,20 +28,20 @@ export interface ApiResponse<T> {
   error: string | null;
 }
 
+const API_URL = 'http://localhost:3000/api';
+
 /**
  * Busca todas as categorias (posições) de treino
  */
 export const getCategoriasTreino = async (): Promise<ApiResponse<CategoriaTreino[]>> => {
   try {
-    const { data, error } = await supabase
-      .from('categorias_treino')
-      .select('*')
-      .order('criado_em', { ascending: true });
-
-    if (error) {
-      return { data: null, error: error.message };
+    const response = await fetch(`${API_URL}/categories`);
+    
+    if (!response.ok) {
+      return { data: null, error: `Erro ${response.status}` };
     }
 
+    const data = await response.json();
     return { data: data || [], error: null };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -48,17 +56,20 @@ export const getCategoriaTreinoById = async (
   categoriaId: string
 ): Promise<ApiResponse<CategoriaTreino>> => {
   try {
-    const { data, error } = await supabase
-      .from('categorias_treino')
-      .select('*')
-      .eq('id', categoriaId)
-      .single();
-
-    if (error) {
-      return { data: null, error: error.message };
+    const response = await fetch(`${API_URL}/categories`);
+    
+    if (!response.ok) {
+      return { data: null, error: `Erro ${response.status}` };
     }
 
-    return { data, error: null };
+    const data = await response.json();
+    const categoria = data.find((cat: CategoriaTreino) => cat.id === categoriaId);
+
+    if (!categoria) {
+      return { data: null, error: 'Categoria não encontrada' };
+    }
+
+    return { data: categoria, error: null };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro desconhecido';
     return { data: null, error: message };

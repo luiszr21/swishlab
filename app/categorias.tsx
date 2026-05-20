@@ -135,6 +135,7 @@ export default function TelaCategorias() {
         source={require('../assets/images/imagem_home.jpg')}
         style={styles.background}
         resizeMode="cover"
+        imageStyle={styles.backgroundImage}
       >
         <View style={styles.overlay} />
         <FlatList
@@ -157,6 +158,12 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backgroundImage: {
+    resizeMode: 'cover',
+    alignSelf: 'center',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
