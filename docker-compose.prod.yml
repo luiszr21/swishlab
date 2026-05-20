@@ -1,0 +1,78 @@
+services:
+  # PostgreSQL Database - Port 3020
+  postgres:
+    image: postgres:16-alpine
+    container_name: swishlab-db-prod
+    environment:
+      POSTGRES_USER: swishlab
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-swishlab123}
+      POSTGRES_DB: swishlab_db
+    ports:
+      - "3020:5432"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swishlab"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - swishlab-network-prod
+    restart: always
+
+  # Backend API - Port 3021
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: swishlab-backend-prod
+    environment:
+      PORT: 3021
+      NODE_ENV: production
+      DATABASE_URL: postgresql://swishlab:${DB_PASSWORD:-swishlab123}@postgres:5432/swishlab_db
+      JWT_SECRET: ${JWT_SECRET:-sua_chave_secreta_super_segura_aqui_mude_em_producao}
+      JWT_EXPIRES_IN: 48h
+    ports:
+      - "3021:3021"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - swishlab-network-prod
+    restart: always
+    command: npm start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3021/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend (Expo Web) - Port 3022
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: swishlab-frontend-prod
+    environment:
+      NODE_ENV: production
+      EXPO_PUBLIC_API_URL: http://localhost:3021/api
+    ports:
+      - "3022:8081"
+    depends_on:
+      - backend
+    networks:
+      - swishlab-network-prod
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data_prod:
+    driver: local
+
+networks:
+  swishlab-network-prod:
+    driver: bridge
