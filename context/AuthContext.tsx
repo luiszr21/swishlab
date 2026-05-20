@@ -1,18 +1,24 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '../services/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getCurrentUser, checkAuthStatus } from '../services/auth';
+
+export type AuthUser = {
+  id: string;
+  email: string;
+  username?: string;
+};
 
 type AuthContextType = {
-  session: Session | null;
-  user: { id: string; email: string } | null;
+  user: AuthUser | null;
   loading: boolean;
   error: string | null;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,41 +26,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Verificar sessão ao iniciar
     const checkSession = async () => {
       try {
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
-        if (error) throw error;
-        setSession(session);
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao verificar sessão');
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
     checkSession();
-
-    // Ouvir mudanças de autenticação
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    return () => subscription?.unsubscribe();
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        session,
-        user: session?.user
-          ? { id: session.user.id, email: session.user.email || '' }
-          : null,
+        user,
         loading,
         error,
+        isAuthenticated: !!user,
       }}
     >
       {children}
