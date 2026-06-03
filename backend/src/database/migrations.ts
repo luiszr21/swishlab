@@ -6,6 +6,8 @@ export async function runMigrations(): Promise<void> {
   try {
     console.log('Running database migrations...');
 
+    await client.query(`CREATE EXTENSION IF NOT EXISTS pgcrypto;`);
+
     // Create users table
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -28,9 +30,12 @@ export async function runMigrations(): Promise<void> {
         position_id VARCHAR(50) NOT NULL,
         completed_at TIMESTAMP NOT NULL,
         duration_minutes INTEGER,
+        notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    await client.query(`ALTER TABLE training_history ADD COLUMN IF NOT EXISTS notes TEXT;`);
 
     // Create indexes
     await client.query(`CREATE INDEX IF NOT EXISTS idx_training_history_user_id ON training_history(user_id);`);

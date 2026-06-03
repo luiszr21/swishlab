@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
 export interface AuthUser {
   id: string;
@@ -93,7 +93,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
     const data = await response.json();
     return { id: data.id, email: data.email, username: data.username };
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -108,7 +108,7 @@ export async function checkAuthStatus(): Promise<boolean> {
     });
 
     return response.ok;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

@@ -14,20 +14,14 @@ frontend/
 │   ├── categoria-treinos.tsx
 │   ├── treinos.tsx
 │   ├── detalhe-treinos.tsx
-│   ├── video.tsx
 │   ├── inicio.tsx
 │   ├── index.tsx
-│   └── layout.tsx
-├── components/            # Componentes reutilizáveis
+│   └── _layout.tsx
 ├── constants/            # Constantes (tema, cores, etc)
-├── context/              # React Context (auth)
 ├── data/                 # Dados estáticos
-├── hooks/                # Hooks customizados
 ├── services/             # Chamadas à API
-│   ├── auth.ts          # Autenticação
-│   ├── userData.ts      # Usuário
-│   ├── treinos.ts       # Treinos
-│   └── posicoes.ts      # Posições
+│   ├── auth.ts           # Autenticação
+│   └── userData.ts       # Usuário
 ├── scripts/              # Scripts utilitários
 ├── assets/              # Imagens e assets
 ├── app.json             # Configuração Expo
@@ -100,7 +94,6 @@ EXPO_PUBLIC_API_URL=https://api.seu-dominio.com/api
 | Categorias | `/categorias` | Listar categorias de treino |
 | Treinos | `/categoria-treinos` | Treinos por categoria |
 | Detalhes | `/detalhe-treinos` | Detalhes do treino |
-| Vídeo | `/video` | Reproduzir vídeo treino |
 | Início | `/inicio` | Posições de basquete |
 
 ## 🔐 Autenticação
