@@ -54,17 +54,16 @@ services:
       dockerfile: Dockerfile
     container_name: swishlab-frontend-prod
     environment:
-      NODE_ENV: production
-      EXPO_PUBLIC_API_URL: http://localhost:3021/api
+      EXPO_PUBLIC_API_URL: /api
     ports:
-      - "3022:8081"
+      - "3022:80"
     depends_on:
       - backend
     networks:
       - swishlab-network-prod
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
       timeout: 10s
       retries: 3

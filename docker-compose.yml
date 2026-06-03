@@ -44,11 +44,11 @@ services:
   # Frontend (Expo Web)
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: swishlab-frontend
     environment:
-      EXPO_PUBLIC_API_URL: http://backend:3000
+      EXPO_PUBLIC_API_URL: http://localhost:3000/api
     ports:
       - "8081:8081"
     depends_on:

@@ -72,7 +72,7 @@ DB_PASSWORD=swishlab123_production_change_this
 JWT_SECRET=sua_chave_jwt_super_secreta_mude_isto_em_producao
 
 # API URL
-EXPO_PUBLIC_API_URL=http://localhost:3021/api
+EXPO_PUBLIC_API_URL=/api
 ```
 
 ### ⚠️ Antes de Deploying para Produção
@@ -85,7 +85,7 @@ EXPO_PUBLIC_API_URL=http://localhost:3021/api
 
 2. **Configure a URL correta da API:**
    ```env
-   EXPO_PUBLIC_API_URL=https://seu-dominio.com/api
+   EXPO_PUBLIC_API_URL=/api
    ```
 
 3. **Habilite HTTPS:**

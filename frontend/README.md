@@ -2,6 +2,14 @@
 
 Aplicação mobile (iOS/Android) e web desenvolvida com Expo e React Native.
 
+## Requisitos
+
+- Node.js 20 ou 22 LTS
+- npm 10+
+- Expo CLI via `npm run start` / `npm run web`
+
+Em produção, o frontend usa `EXPO_PUBLIC_API_URL=/api` e o Nginx faz proxy para o backend pela rede interna do Docker.
+
 ## 📁 Estrutura
 
 ```
@@ -48,6 +56,8 @@ npm start
 # - Pressionar 'a' para Android
 # - Pressionar 'w' para Web
 ```
+
+Se você estiver usando Node 25 ou outra versão fora do intervalo suportado, o Metro pode falhar na inicialização do web em Windows. Use Node 20/22 antes de subir para produção.
 
 ### Docker
 
