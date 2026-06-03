@@ -17,7 +17,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init curl
 
 ENV NODE_ENV=production
 
