@@ -5,7 +5,7 @@ services:
     container_name: swishlab-db-prod
     environment:
       POSTGRES_USER: swishlab
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-swishlab123}
+      POSTGRES_PASSWORD: swishlab123
       POSTGRES_DB: swishlab_db
     ports:
       - "3020:5432"
@@ -29,7 +29,7 @@ services:
     environment:
       PORT: 3021
       NODE_ENV: production
-      DATABASE_URL: postgresql://swishlab:${DB_PASSWORD:-swishlab123}@postgres:5432/swishlab_db
+      DATABASE_URL: postgresql://swishlab:swishlab123@postgres:5432/swishlab_db
       JWT_SECRET: ${JWT_SECRET:-sua_chave_secreta_super_segura_aqui_mude_em_producao}
       JWT_EXPIRES_IN: 48h
     ports:
