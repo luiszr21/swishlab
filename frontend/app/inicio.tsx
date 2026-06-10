@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 import { arredondamento, cores, espacamento } from '../constants/theme';
 import { Posicao, posicoes } from '../data/posicoes';
-import { getIsLogged, logoutUser } from '../services/userData';
+import { checkAuthStatus, logoutUser } from '../services/auth';
 
 export default function TelaInicial() {
   const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isLogged = await getIsLogged();
+      const isLogged = await checkAuthStatus();
       if (!isLogged) {
         router.replace('/auth/login');
       }

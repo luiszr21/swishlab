@@ -1,7 +1,7 @@
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { registerUser } from '../../services/userData';
+import { registerUser } from '../../services/auth';
 
 export default function Cadastro() {
   const router = useRouter();

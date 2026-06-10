@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { arredondamento, cores, espacamento } from '../constants/theme';
-import { getIsLogged, logoutUser } from '../services/userData';
+import { checkAuthStatus, logoutUser } from '../services/auth';
 
 type CategoriaTreino = {
   id: 'arremesso' | 'drible' | 'ataque-defesa' | 'posicao';
@@ -57,7 +57,7 @@ export default function TelaCategorias() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isLogged = await getIsLogged();
+      const isLogged = await checkAuthStatus();
       if (!isLogged) {
         router.replace('/auth/login');
       }

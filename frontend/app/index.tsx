@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { arredondamento, cores, espacamento } from '../constants/theme';
-import { getIsLogged } from '../services/userData';
+import { checkAuthStatus } from '../services/auth';
 
 export default function Landing() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function Landing() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isLogged = await getIsLogged();
+      const isLogged = await checkAuthStatus();
       if (isLogged) {
         router.replace('/categorias');
       } else {
