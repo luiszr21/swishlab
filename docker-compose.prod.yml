@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U swishlab"]
+      test: ["CMD-SHELL", "pg_isready -d swishlab_db -U swishlab"]
       interval: 10s
       timeout: 5s
       retries: 5
